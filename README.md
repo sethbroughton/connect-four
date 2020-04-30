@@ -22,6 +22,7 @@ OR
   
 You may write this with a graphical user interface.
           
+![Connect Four Graphical User Interface Example](ConnectFour-SampleGUI.png?raw=true "Connect Four Graphical User Interface Example")
 
 
 #### Rules

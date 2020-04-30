@@ -22,7 +22,7 @@ OR
   
 You may write this with a graphical user interface.
           
-![Connect Four Graphical User Interface Example](ConnectFour-SampleGUI.png?raw=true "Connect Four Graphical User Interface Example")
+<img src="ConnectFour-SampleGUI.png" width="25%" height="25%" alt="Connect Four Graphical User Interface Example"/>
 
 
 #### Rules

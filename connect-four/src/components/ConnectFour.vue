@@ -1,15 +1,28 @@
 <template>
   <div>
     <h1 class="title"> Connect Four </h1>
-     <div class="connect-four-board">
-        <div v-for="(n, i) in 7" v-bind:key="i">
-          <div v-for="(n, j) in 7" v-bind:key="j">
-            <input @click="performMove(i,j)" v-bind:class="{'red':redPlayer}" class="cell"/>
-          </div>
-        </div>
+     <div class="connect-four-board container">
+       <div v-on:click="performMove(0)">
+       <span class="dot" v-bind:class="getClass(0,0)"/>
+       <span class="dot"/>
+       <span class="dot"/>
+       <span class="dot"/>
+       <span class="dot"/>
+       <span class="dot"/>
+       <span class="dot" v-bind:class="getClass(0,6)"/>
+       </div>
+       <div v-on:click="performMove(1)">
+       <span class="dot"/>
+       <span class="dot"/>
+       <span class="dot"/>
+       <span class="dot"/>
+       <span class="dot"/>
+       <span class="dot"/>
+       <span class="dot"/>
+       </div>
        </div>
   </div>
-</template>]
+</template>
 
 <script>
 export default {
@@ -18,42 +31,48 @@ export default {
     msg: String
   },
   data() { return {
-    activePlayer: '0', //red
-    redPlayer: false,
-    blackPlayer: false,
-    inactivePlayer: '1', //black
     board:  [
+        ['1','1','1','1','1','1','2'],
         ['','','','','','',''],
         ['','','','','','',''],
         ['','','','','','',''],
         ['','','','','','',''],
         ['','','','','','',''],
         ['','','','','','',''],
-        ['','','','','','',''],
-        ]
+        ],
+      col: 0
   }}, 
   methods: {
-    performMove(x,y){
+    performMove(col){
       //check if valid move
 
       //Change state
-        this.board[x][y] = this.activePlayer;
-        if(this.redPlayer){
-          this.redPlayer = false;
-          this.blackPlayer = true;
-        } else {
-          this.redPlayer = true;
-          this.blackPlayer = false;
-        }
+      let column = this.board[col];
+      let position = column.lastIndexOf('');
+      if(position!=-1){
+        console.log(position);
 
-        //Switch players
-        let temp = this.activePlayer;
-        this.activePlayer = this.inactivePlayer;
-        this.inactivePlayer = temp;
 
-        //reload board
+
+
+      }
+
+
+      //Switch players
+
+
+      //reload board
         this.$forceUpdate();
 
+    },
+    getClass(x,y){
+      let position = this.board[x][y];
+      if(position == '1'){
+        return 'red';
+      } else if(position == '2') {
+        return 'black';
+      }
+      return 
     },
     checkWin(){
       return 1;
@@ -83,11 +102,25 @@ h3 {
         align-items: center;
         justify-content: center;
     }
+
+    .dot {
+        height: 50px;
+        width: 50px;
+        background-color: #bbb;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
     .red{
       background-color: red;
 
     }
     .black{
       background-color: black
+    }
+    .blank{
+      background-color: #bbb
     }
 </style>

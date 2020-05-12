@@ -2,25 +2,14 @@
   <div>
     <h1 class="title"> Connect Four </h1>
      <div class="connect-four-board container">
-       <div v-on:click="performMove(0)">
-       <span class="dot" v-bind:class="getClass(0,0)"/>
-       <span class="dot"/>
-       <span class="dot"/>
-       <span class="dot"/>
-       <span class="dot"/>
-       <span class="dot"/>
-       <span class="dot" v-bind:class="getClass(0,6)"/>
+       <div v-for="(n, i) in 7" v-bind:key="i">
+         <div v-on:click="performMove(i)">
+          <div v-for="(n, j) in 7" v-bind:key="j">
+            <span class="dot" v-bind:class="getClass(i,j)"/>
+          </div>
+         </div>
        </div>
-       <div v-on:click="performMove(1)">
-       <span class="dot"/>
-       <span class="dot"/>
-       <span class="dot"/>
-       <span class="dot"/>
-       <span class="dot"/>
-       <span class="dot"/>
-       <span class="dot"/>
-       </div>
-       </div>
+     </div>
   </div>
 </template>
 
@@ -44,12 +33,9 @@ export default {
   }}, 
   methods: {
     performMove(col){
-      //check if valid move
-
-      //Change state
       let column = this.board[col];
       let position = column.lastIndexOf('');
-      if(position!=-1){
+      if(position!=-1){ //Check if valid move
         console.log(position);
 
 

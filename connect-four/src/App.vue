@@ -1,0 +1,30 @@
+<template>
+  <div id="app">
+    <connect-four/>
+    <!-- <sudoku/> -->
+  </div>
+</template>
+
+<script>
+import ConnectFour from './components/ConnectFour.vue'
+// import Sudoku from './components/Sudoku.vue'
+
+export default {
+  name: 'App',
+  components: {
+    ConnectFour
+    
+  }
+}
+</script>
+
+<style>
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+  margin-top: 60px;
+}
+</style>

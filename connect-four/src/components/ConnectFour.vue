@@ -37,13 +37,13 @@ export default {
       let column = this.board[col];
       let lastPosition = column.lastIndexOf('');
       if(lastPosition!=-1){ //Check if valid move
-        console.log(lastPosition);
         //Change state of dot in last position
         if(this.redTurn){
           this.board[col][lastPosition] = 1;
         } else {
           this.board[col][lastPosition] = 2;  
         }
+        console.log(`i=${lastPosition} j=${col}`)
         //Check winner
         this.checkWin();
 
@@ -63,6 +63,7 @@ export default {
       }
       return 
     },
+
     checkWin(){
       //check vertical
       let counter = 0;
@@ -103,12 +104,34 @@ export default {
         }
       }
 
-      //
-      
-    }
+      //Diagonal - left to right
+       for(let i = 3; i<arr.length; i++){
+         for(let j = 0; j<arr.length-3; j++){
+           let position = arr[i][j];
+           if(position != ''){
+           if(position==arr[i-1][j+1] && position==arr[i-2][j+2] && position==arr[i-3][j+3]){
+             console.log('winner');
+           }
+           }
+         }
+       }
 
+      //Diagonal - right to left
+        for(let i = 3; i<arr.length; i++){
+         for(let j = 3; j<arr.length; j++){
+           let position = arr[j][i];
+           if(position != ''){
+           if(position==arr[j-1][i-1] && position==arr[j-2][i-2] && position==arr[j-3][i-3]){
+             console.log('winner');
+           }
+           }
+         }
+       }
+
+    }
   }
 }
+  
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

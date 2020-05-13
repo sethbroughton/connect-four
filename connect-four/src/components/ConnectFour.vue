@@ -9,6 +9,7 @@
           </div>
          </div>
        </div>
+        <button class="button is-light" v-on:click="resetBoard">Reset</button>
      </div>
   </div>
 </template>
@@ -33,6 +34,57 @@ export default {
       redTurn: true,
   }}, 
   methods: {
+    opponentPlay(){
+      let input = this.stringifyBoard(this.board)
+      
+      fetch(`http://kevinalbs.com/connect4/back-end/index.php/getMoves?board_data=${input}`)
+      .then((response) => {
+        return response.json();
+      })
+      .then((values) => {
+        let max = 0;
+        let opponentMove = "0";
+        for(let i = 0; i<7; i++){
+            if(values[i]>max){
+            opponentMove = i;
+        }
+        //this.opponentMove = opponentMove;
+        let column = this.board[opponentMove];
+        let lastPosition = column.lastIndexOf('');
+        this.board[column][lastPosition] = 2; 
+
+        this.redTurn = !this.redTurn;
+        this.$forceUpdate();
+    }
+      })
+    },
+    stringifyBoard(arr){
+      let board = "";
+      for(let i = 0; i<arr.length; i++){
+        for(let j = 6; j>=0; j--){
+          let position = arr[j][i];
+          if(position == ''){
+            position = '0';
+          }
+          board = board + position;
+        }
+      }
+      console.log(board);
+      return board;
+
+    },
+    resetBoard(){
+      this.board = [
+        ['','','','','','',''],
+        ['','','','','','',''],
+        ['','','','','','',''],
+        ['','','','','','',''],
+        ['','','','','','',''],
+        ['','','','','','',''],
+        ['','','','','','',''],
+        ];
+      this.$forceUpdate();
+    },
     performMove(col){
       let column = this.board[col];
       let lastPosition = column.lastIndexOf('');
@@ -46,12 +98,15 @@ export default {
         console.log(`i=${lastPosition} j=${col}`)
         //Check winner
         this.checkWin();
+        this.stringifyBoard(this.board);
 
         //Switch Players
         this.redTurn = !this.redTurn;
+        
       }
       //reload board
         this.$forceUpdate();
+
 
     },
     getClass(x,y){
@@ -145,15 +200,6 @@ h3 {
     width: 800px;
     height: 800px;
   }
-   .cell {
-        width: 50px;
-        height: 50px;
-        border: 2px solid rgb(75,75,75);
-        font-size: 42px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
 
     .dot {
         height: 50px;

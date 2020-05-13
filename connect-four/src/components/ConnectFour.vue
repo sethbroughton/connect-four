@@ -21,7 +21,7 @@ export default {
   },
   data() { return {
     board:  [
-        ['1','1','1','1','1','1','2'],
+        ['','','','','','',''],
         ['','','','','','',''],
         ['','','','','','',''],
         ['','','','','','',''],
@@ -29,24 +29,27 @@ export default {
         ['','','','','','',''],
         ['','','','','','',''],
         ],
-      col: 0
+      col: 0, 
+      redTurn: true,
   }}, 
   methods: {
     performMove(col){
       let column = this.board[col];
-      let position = column.lastIndexOf('');
-      if(position!=-1){ //Check if valid move
-        console.log(position);
+      let lastPosition = column.lastIndexOf('');
+      if(lastPosition!=-1){ //Check if valid move
+        console.log(lastPosition);
+        //Change state of dot in last position
+        if(this.redTurn){
+          this.board[col][lastPosition] = 1;
+        } else {
+          this.board[col][lastPosition] = 2;  
+        }
+        //Check winner
+        this.checkWin();
 
-
-
-
+        //Switch Players
+        this.redTurn = !this.redTurn;
       }
-
-
-      //Switch players
-
-
       //reload board
         this.$forceUpdate();
 
@@ -61,7 +64,47 @@ export default {
       return 
     },
     checkWin(){
-      return 1;
+      //check vertical
+      let counter = 0;
+      let arr = this.board;
+      for(let i = 0; i<arr.length; i++){
+        let start = arr[i][0];
+        counter = 1;
+        for(let j = 1; j<arr.length; j++){
+          let position = arr[i][j];
+          if(position == start && start!=''){
+            counter++;
+            if(counter==4){
+              console.log('winner' + position)
+            }
+          } else {
+            start = position;
+            counter = 1;
+          }
+        }
+      }
+
+      //check horizontal
+      counter = 0;
+      for(let i = 0; i<arr.length; i++){
+        let start = arr[0][i];
+        counter = 1;
+        for(let j = 1; j<arr.length; j++){
+          let position = arr[j][i];
+          if(position == start && start!=''){
+            counter++;
+            if(counter==4){
+              console.log('winner')
+            }
+          } else {
+            start = position;
+            counter = 1;
+          }
+        }
+      }
+
+      //
+      
     }
 
   }

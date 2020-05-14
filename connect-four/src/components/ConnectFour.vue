@@ -2,15 +2,15 @@
   <div>
     <h1 class="title"> Connect Four </h1>
     
-     <div class="connect-four-board container">
+     <div class="connect-four-board">
        <div v-if="winner==''">
          <div v-if="redTurn">
            <span> Red's Turn </span>
-           <span class = "dot red"> </span>
+           <span class = "square red"> </span>
          </div>
          <div v-else>
            <span> Black's Turn </span>
-           <span class = "dot black"></span>
+           <span class = "square black"></span>
           </div>
        </div>
        <div v-else>
@@ -24,8 +24,8 @@
          </div>
        </div>
        <div v-for="(n, i) in 7" v-bind:key="i">
-         <div v-on:click="performMove(i)">
-          <div v-for="(n, j) in 7" v-bind:key="j">
+         <div v-on:click="performMove(i)" class="column">
+          <div v-for="(n, j) in 7" v-bind:key="j" class="row">
             <span class="dot" v-bind:class="getClass(i,j)"/>
           </div>
          </div>
@@ -60,33 +60,27 @@ export default {
   methods: {
     opponentPlay(){
       let input = this.stringifyBoard(this.board)
-      console.log(input)
+
       fetch(`http://kevinalbs.com/connect4/back-end/index.php/getMoves?board_data=${input}`)
       .then((response) => {
         return response.json();
       })
       .then((values) => {
-        let max = 0;
-        let col = "0";
-        for(let i = 0; i<7; i++){
-            if(values[i]>max){
-            col = i;
-        }
-        }
+
+        let keysSorted = Object.keys(values).sort(function(a,b){return values[b]-values[a]})
+        let col = keysSorted[0]
+        console.log(col)
         let column = this.board[col];
         let lastPosition = column.lastIndexOf('');
-        if(this.redTurn){
-            this.board[col][lastPosition] = 1;
-          } else {
-            this.board[col][lastPosition] = 2;  
-          }
+
+        this.board[col][lastPosition] = 2;  
+       
+
           //Check winner
           this.checkWin();
 
           //Switch Players
           this.redTurn = !this.redTurn;
-
-          this.$forceUpdate();
       })
     },
     stringifyBoard(arr){
@@ -142,10 +136,11 @@ export default {
         //reload board
           this.$forceUpdate();
         }
-          if (this.computer && !this.redTurn){
+          if (this.computer && !this.redTurn && this.winner==''){
           this.opponentPlay();
       }
     },
+
     getClass(x,y){
       let position = this.board[x][y];
       if(position == '1'){
@@ -241,16 +236,25 @@ h3 {
 }
 .connect-four-board {
     display: flex;
-    flex-wrap: wrap;
     width: 800px;
     height: 800px;
+
   }
 
     .dot {
-        height: 50px;
-        width: 50px;
+        height: 70px;
+        width: 70px;
         background-color: #bbb;
         border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .square {
+      height: 30px;
+        width: 70px;
+        background-color: #bbb;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -264,6 +268,15 @@ h3 {
       background-color: black
     }
     .blank{
-      background-color: #bbb
+      background-color:white
+    }
+    .column{
+      background-color:grey
+    }
+    .column:hover{
+      background-color: green
+    }
+    .row{
+      background-color: grey
     }
 </style>

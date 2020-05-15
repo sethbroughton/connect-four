@@ -1,16 +1,16 @@
 <template>
   <div>
     <h1 class="title"> Connect Four </h1>
-    
      <div class="connect-four-board">
+       <div class="status">
        <div v-if="winner==''">
          <div v-if="redTurn">
            <span> Red's Turn </span>
-           <span class = "square red"> </span>
+           <span class = "dot red"> </span>
          </div>
          <div v-else>
            <span> Black's Turn </span>
-           <span class = "square black"></span>
+           <span class = "dot black"></span>
           </div>
        </div>
        <div v-else>
@@ -23,6 +23,7 @@
            <span class = "dot black"></span>
          </div>
        </div>
+       </div>
        <div v-for="(n, i) in 7" v-bind:key="i">
          <div v-on:click="performMove(i)" class="column">
           <div v-for="(n, j) in 7" v-bind:key="j" class="row">
@@ -30,7 +31,7 @@
           </div>
          </div>
        </div>
-        <button class="button is-light" v-on:click="resetBoard">{{reset}}</button>
+        <button class="button is-dark status" v-on:click="resetBoard">{{reset}}</button>
      </div>
   </div>
 </template>
@@ -61,7 +62,7 @@ export default {
     opponentPlay(){
       let input = this.stringifyBoard(this.board)
 
-      fetch(`http://kevinalbs.com/connect4/back-end/index.php/getMoves?board_data=${input}`)
+      fetch(`http://kevinalbs.com/connect4/back-end/index.php/getMoves?board_data=${input}&player=2`)
       .then((response) => {
         return response.json();
       })
@@ -75,7 +76,6 @@ export default {
 
         this.board[col][lastPosition] = 2;  
        
-
           //Check winner
           this.checkWin();
 
@@ -86,7 +86,7 @@ export default {
     stringifyBoard(arr){
       let board = "";
       for(let i = 0; i<arr.length; i++){
-        for(let j = 6; j>=0; j--){
+        for(let j = 0; j<arr.length; j++){
           let position = arr[j][i];
           if(position == ''){
             position = '0';
@@ -238,7 +238,7 @@ h3 {
     display: flex;
     width: 800px;
     height: 800px;
-
+    margin-left: 300px
   }
 
     .dot {
@@ -258,6 +258,9 @@ h3 {
         display: flex;
         align-items: center;
         justify-content: center;
+    }
+    .status {
+      margin: 20px;
     }
 
     .red{

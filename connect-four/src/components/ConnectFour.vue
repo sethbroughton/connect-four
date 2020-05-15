@@ -37,7 +37,7 @@
        </div>
         <button class="button is-dark status" v-on:click="resetBoard(), startGame=false">Return to Menu</button>
        <div v-if="winner!=''">
-        <button class="button is-dark status" v-on:click="resetBoard()">Play Again</button>
+        <button class="button is-primary status" v-on:click="resetBoard()">Play Again</button>
         </div>
        
      </div>
@@ -134,7 +134,7 @@ export default {
           } else {
             this.board[col][lastPosition] = 2;  
           }
-          console.log(`i=${lastPosition} j=${col}`)
+  
           //Check winner
           this.checkWin();
 

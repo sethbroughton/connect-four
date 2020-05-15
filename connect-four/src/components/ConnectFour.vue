@@ -1,7 +1,11 @@
 <template>
   <div>
     <h1 class="title"> Connect Four </h1>
-     <div class="connect-four-board">
+    <div v-show="!startGame">
+      <button class="button is-primary is-large status" v-model: v-on:click="startGame=true; computer=false">2 Player</button>
+      <button class="button is-primary is-large status" v-on:click="startGame=true; computer=true">1 Player</button>
+    </div>
+     <div v-show="startGame" class="connect-four-board">
        <div class="status">
        <div v-if="winner==''">
          <div v-if="redTurn">
@@ -31,7 +35,11 @@
           </div>
          </div>
        </div>
-        <button class="button is-dark status" v-on:click="resetBoard">{{reset}}</button>
+        <button class="button is-dark status" v-on:click="resetBoard(), startGame=false">Return to Menu</button>
+       <div v-if="winner!=''">
+        <button class="button is-dark status" v-on:click="resetBoard()">Play Again</button>
+        </div>
+       
      </div>
   </div>
 </template>
@@ -55,8 +63,9 @@ export default {
       col: 0, 
       redTurn: true,
       winner: '',
-      reset: 'Reset',
+      reset: 'End Game',
       computer: true,
+      startGame: false
   }}, 
   methods: {
     opponentPlay(){

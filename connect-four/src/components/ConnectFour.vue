@@ -1,11 +1,12 @@
 <template>
   <div>
     <h1 class="title"> Connect Four </h1>
-    <div v-show="!startGame">
+    <!-- <div v-show="!startGame">
       <button class="button is-primary is-large status" v-model: v-on:click="startGame=true; computer=false">2 Player</button>
       <button class="button is-primary is-large status" v-on:click="startGame=true; computer=true">1 Player</button>
-    </div>
-     <div v-show="startGame" class="connect-four-board">
+    </div> -->
+     <!-- <div v-show="startGame" class="connect-four-board"> -->
+       <div class="connect-four-board">
        <div class="status">
        <div v-if="winner==''">
          <div v-if="redTurn">
@@ -35,7 +36,7 @@
           </div>
          </div>
        </div>
-        <button class="button is-dark status" v-on:click="resetBoard(), startGame=false">Return to Menu</button>
+        <!-- <button class="button is-dark status" v-on:click="resetBoard(), startGame=false">Return to Menu</button> -->
        <div v-if="winner!=''">
         <button class="button is-primary status" v-on:click="resetBoard()">Play Again</button>
         </div>
@@ -45,78 +46,34 @@
 </template>
 
 <script>
+import io from "socket.io-client"
 export default {
   name: 'ConnectFour',
   props: {
     msg: String
   },
-  data() { return {
-    board:  [
-        ['','','','','','',''],
-        ['','','','','','',''],
-        ['','','','','','',''],
-        ['','','','','','',''],
-        ['','','','','','',''],
-        ['','','','','','',''],
-        ['','','','','','',''],
-        ],
-      col: 0, 
-      redTurn: true,
+  data() { 
+    return {
+      socket: {},
+      board:  [
+          ['','','','','','',''],
+          ['','','','','','',''],
+          ['','','','','','',''],
+          ['','','','','','',''],
+          ['','','','','','',''],
+          ['','','','','','',''],
+          ['','','','','','',''],
+          ],
+        col: 0, 
+        redTurn: true,
       winner: '',
       reset: 'End Game',
-      computer: true,
-      startGame: false
+      startGame: false,
+      // currentPlayer: 1
   }}, 
   methods: {
-    opponentPlay(){
-      let input = this.stringifyBoard(this.board)
-
-      fetch(`http://kevinalbs.com/connect4/back-end/index.php/getMoves?board_data=${input}&player=2`)
-      .then((response) => {
-        return response.json();
-      })
-      .then((values) => {
-
-        let keysSorted = Object.keys(values).sort(function(a,b){return values[b]-values[a]})
-        let col = keysSorted[0]
-        console.log(col)
-        let column = this.board[col];
-        let lastPosition = column.lastIndexOf('');
-
-        this.board[col][lastPosition] = 2;  
-       
-          //Check winner
-          this.checkWin();
-
-          //Switch Players
-          this.redTurn = !this.redTurn;
-      })
-    },
-    stringifyBoard(arr){
-      let board = "";
-      for(let i = 0; i<arr.length; i++){
-        for(let j = 0; j<arr.length; j++){
-          let position = arr[j][i];
-          if(position == ''){
-            position = '0';
-          }
-          board = board + position;
-        }
-      }
-      console.log(board);
-      return board;
-
-    },
     resetBoard(){
-      this.board = [
-        ['','','','','','',''],
-        ['','','','','','',''],
-        ['','','','','','',''],
-        ['','','','','','',''],
-        ['','','','','','',''],
-        ['','','','','','',''],
-        ['','','','','','',''],
-        ];
+      this.socket.emit("reset")
         this.winner = '';
         this.reset = 'Reset';
         this.redTurn = true;
@@ -126,15 +83,19 @@ export default {
         if(this.winner==''){
         let column = this.board[col];
         let lastPosition = column.lastIndexOf('');
+        let player = this.current()
+        console.log(lastPosition);
         if(lastPosition!=-1){ //Check if valid move
 
           //Change state of dot in last position
-          if(this.redTurn){
-            this.board[col][lastPosition] = 1;
-          } else {
-            this.board[col][lastPosition] = 2;  
+         let move = {
+            'lastPosition': lastPosition,
+            'column': col,
+            'player': player
           }
-  
+
+          this.socket.emit("move", move)
+
           //Check winner
           this.checkWin();
 
@@ -143,11 +104,8 @@ export default {
         }
       
         //reload board
-          this.$forceUpdate();
+    //      this.$forceUpdate();
         }
-          if (this.computer && !this.redTurn && this.winner==''){
-          this.opponentPlay();
-      }
     },
 
     getClass(x,y){
@@ -232,7 +190,22 @@ export default {
     },
     displayWinner(){
       this.reset = 'Play Again';
+    },
+    current(){
+      if(this.redTurn){
+        return '1'
+      } else {
+        return '2'
+      }
     }
+  },
+  created () {
+    this.socket = io("http://localhost:3000");
+  },
+  mounted () {
+    this.socket.on("board", data => {
+      this.board = data;
+    })
   }
 }
   

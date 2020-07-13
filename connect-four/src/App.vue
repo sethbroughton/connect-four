@@ -1,19 +1,16 @@
 <template>
   <div id="app">
     <connect-four/>
-    <!-- <sudoku/> -->
   </div>
 </template>
 
 <script>
 import ConnectFour from './components/ConnectFour.vue'
-// import Sudoku from './components/Sudoku.vue'
 
 export default {
   name: 'App',
   components: {
     ConnectFour
-    
   }
 }
 </script>

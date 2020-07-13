@@ -135,7 +135,7 @@ export default {
     }
   },
   created () {
-    this.socket = io("http://localhost:3000");
+    this.socket = io("https://fierce-harbor-88891.herokuapp.com");
   },
   mounted () {
     this.socket.on("board", data => {

@@ -3,6 +3,10 @@ const { Socket } = require("dgram");
 const Express = require("express")();
 const Http = require("http").Server(Express)
 const Socketio = require("socket.io")(Http)
+const cors = require('cors')
+
+Express.use(cors())
+
 
 var board =  [
     ['','','','','','',''],
